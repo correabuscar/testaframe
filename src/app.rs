@@ -100,8 +100,9 @@ impl eframe::App for TemplateApp {
         // Tip: a good default choice is to just keep the `CentralPanel`.
         // For inspiration and more examples, go to https://emilk.github.io/egui
 
-        #[cfg(target_arch = "wasm32")] // no File->Quit on web pages!
-        _ = frame; //workaround for unused var on wasm32
+        //error: removing an expression is not supported in this position
+        //#[cfg(target_arch = "wasm32")] // no File->Quit on web pages!
+        //_ = frame; //workaround for unused var on wasm32
 
         #[cfg(not(target_arch = "wasm32"))] // no File->Quit on web pages!
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
