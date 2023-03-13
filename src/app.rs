@@ -8,6 +8,8 @@ pub struct TemplateApp {
     // this how you opt-out of serialization of a member
     #[serde(skip)]
     value: f32,
+
+    cnt1: i32,
 }
 
 impl Default for TemplateApp {
@@ -16,6 +18,7 @@ impl Default for TemplateApp {
             // Example stuff:
             label: "Hello World!".to_owned(),
             value: 2.7,
+            cnt1: 0,
         }
     }
 }
@@ -45,7 +48,23 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { label, value } = self;
+        let Self {
+            label,
+            value,
+            mut cnt1, //goof 1of2
+            //cnt1, //goof_fixed 1of2
+        } = self;
+        egui::Window::new("Window").show(ctx, |ui| {
+            ui.label("Windows can be moved by dragging them.");
+            ui.label("They are automatically sized based on contents.");
+            ui.label("You can turn on resizing and scrolling if you like.");
+            ui.label("You would normally choose either panels OR windows.");
+            ui_counter(ui,
+                       &mut cnt1 //goof 2of2
+                       //cnt1 //goof_fixed 2of2
+                      );
+
+        });
 
         // Examples of how to create different panels and windows.
         // Pick whichever suits you.
@@ -103,14 +122,18 @@ impl eframe::App for TemplateApp {
             ));
             egui::warn_if_debug_build(ui);
         });
-
-        if false {
-            egui::Window::new("Window").show(ctx, |ui| {
-                ui.label("Windows can be moved by dragging them.");
-                ui.label("They are automatically sized based on contents.");
-                ui.label("You can turn on resizing and scrolling if you like.");
-                ui.label("You would normally choose either panels OR windows.");
-            });
-        }
     }
+}
+
+fn ui_counter(ui: &mut egui::Ui, counter: &mut i32) {
+    // Put the buttons and label on the same row:
+    ui.horizontal(|ui| {
+        if ui.button("-").clicked() {
+            *counter -= 1;
+        }
+        ui.label(counter.to_string());
+        if ui.button("+").clicked() {
+            *counter += 1;
+        }
+    });
 }
