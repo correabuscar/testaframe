@@ -118,9 +118,9 @@ impl eframe::App for TemplateApp {
             });
 
             ui.add(egui::Slider::new(value, 0.0..=10.0).text("value"));
+            #[allow(clippy::float_arithmetic)]
+            #[allow(clippy::arithmetic_side_effects)]
             if ui.button("Increment").clicked() {
-                #[allow(clippy::float_arithmetic)]
-                #[allow(clippy::arithmetic_side_effects)]
                 *value += 1.0;
             }
 
@@ -156,15 +156,15 @@ impl eframe::App for TemplateApp {
 fn ui_counter(ui: &mut egui::Ui, counter: &mut i32) {
     // Put the buttons and label on the same row:
     ui.horizontal(|ui1| {
+        #[allow(clippy::integer_arithmetic)]
+        #[allow(clippy::arithmetic_side_effects)]
         if ui1.button("-").clicked() {
-            #[allow(clippy::integer_arithmetic)]
-            #[allow(clippy::arithmetic_side_effects)]
             *counter -= 1;
         }
         ui1.label(counter.to_string());
+        #[allow(clippy::integer_arithmetic)]
+        #[allow(clippy::arithmetic_side_effects)]
         if ui1.button("+").clicked() {
-            #[allow(clippy::integer_arithmetic)]
-            #[allow(clippy::arithmetic_side_effects)]
             *counter += 1;
         }
     });
