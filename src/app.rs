@@ -51,9 +51,13 @@ impl eframe::App for TemplateApp {
         let Self {
             label,
             value,
-            mut cnt1, //goof 1of2
+            mut cnt1, //goof 1of2 ; so this 'mut' makes it 'i32'(due to Copy trait) but w/o it it's '&mut i32'
             //cnt1, //goof_fixed 1of2
         } = self;
+        //in the 'goof' case, we're mutating local copy of the original self.cnt1 when +/- in the ui_counter() function happens
+        //let Self { ref mut label, ref mut value, ref mut cnt1 } = *self; // this works too, thanks
+                                                                         // Arnavion #rust
+                                                                         // liberachat
         egui::Window::new("Window").show(ctx, |ui| {
             ui.label("Windows can be moved by dragging them.");
             ui.label("They are automatically sized based on contents.");
