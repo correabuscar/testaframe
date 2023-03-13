@@ -70,12 +70,14 @@ impl eframe::App for TemplateApp {
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     #[inline]
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        let Self {
+        /*let Self {
             label,
             value,
-            mut cnt1, //goof 1of2 ; so this 'mut' makes it 'i32'(due to Copy trait) but w/o it it's '&mut i32'
-            //cnt1, //goof_fixed 1of2
-        } = self;
+            //mut cnt1, //goof 1of2 ; so this 'mut' makes it 'i32'(due to Copy trait) but w/o it it's '&mut i32' ; caught by clippy:    = note: `#[deny(clippy::pattern_type_mismatch)]` implied by `#[deny(clippy::restriction)]`
+
+            cnt1, //goof_fixed 1of2 (works but clippy doesn't like it!)
+        } = self; */
+        let Self { ref mut label, ref mut value, ref mut cnt1 } = *self; // clippy likes it 1of2
         //in the 'goof' case, we're mutating local copy of the original self.cnt1 when +/- in the ui_counter() function happens
         //let Self { ref mut label, ref mut value, ref mut cnt1 } = *self; // this works too, thanks
                                                                          // Arnavion #rust
@@ -86,8 +88,9 @@ impl eframe::App for TemplateApp {
             ui.label("You can turn on resizing and scrolling if you like.");
             ui.label("You would normally choose either panels OR windows.");
             ui_counter(ui,
-                       &mut cnt1 //goof 2of2
+                       //&mut cnt1 //goof 2of2
                        //cnt1 //goof_fixed 2of2
+                       cnt1 //clippy likes it 2of2
                       );
 
         });
@@ -118,6 +121,9 @@ impl eframe::App for TemplateApp {
             });
 
             ui.add(egui::Slider::new(value, 0.0..=10.0).text("value"));
+
+            //https://doc.rust-lang.org/reference/expressions.html#expression-attributes
+            //must place those 2 on the 'if' else they've no effect on the assingment!
             #[allow(clippy::float_arithmetic)]
             #[allow(clippy::arithmetic_side_effects)]
             if ui.button("Increment").clicked() {

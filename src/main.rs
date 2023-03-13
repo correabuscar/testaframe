@@ -20,10 +20,10 @@ fn main() -> eframe::Result<()> {
     tracing_subscriber::fmt::init();
 
     let native_options = eframe::NativeOptions::default();
-    eframe::run_native(
+    return eframe::run_native(
         "eframe template",
         native_options,
-        Box::new(|cc| Box::new(eframe_template::TemplateApp::new(cc))),
+        Box::new(|cc| return Box::new(eframe_template::TemplateApp::new(cc))),
     )
 }
 

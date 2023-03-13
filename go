@@ -1,2 +1,2 @@
 echo "------------------------------------------------------------------------------------"
-cargo clippy && cargo build
+cargo clippy && cargo build && cargo run

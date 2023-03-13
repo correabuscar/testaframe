@@ -15,6 +15,7 @@
 //#![warn(clippy::all, rust_2018_idioms)]
 
 mod app;
-#[allow(clippy::useless_attribute)]
+#[allow(clippy::useless_attribute)] // need this for the #[allow(clippy::pub_use)] below to be
+                                    // allowed by clippy, lol
 #[allow(clippy::pub_use)] //FIXME: deny this!
 pub use app::TemplateApp;
