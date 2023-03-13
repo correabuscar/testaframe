@@ -1,6 +1,20 @@
+#![deny(clippy::all, clippy::pedantic, clippy::nursery, warnings, nonstandard_style,
+        clippy::restriction, rust_2018_compatibility, unused)]
+#![allow(clippy::print_stdout, clippy::use_debug, clippy::missing_docs_in_private_items)]
+
+#![allow(clippy::blanket_clippy_restriction_lints)] //workaround clippy
+
+#![allow(clippy::needless_return)]
+
+// might want to deny later:
+#![allow(clippy::default_numeric_fallback)] // might want to deny later!
+#![allow(clippy::dbg_macro)]
+
+
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
+#[allow(clippy::module_name_repetitions)] //FIXME: deny this!
 pub struct TemplateApp {
     // Example stuff:
     label: String,
@@ -13,8 +27,9 @@ pub struct TemplateApp {
 }
 
 impl Default for TemplateApp {
+    #[inline]
     fn default() -> Self {
-        Self {
+        return Self {
             // Example stuff:
             label: "Hello World!".to_owned(),
             value: 2.7,
@@ -25,7 +40,8 @@ impl Default for TemplateApp {
 
 impl TemplateApp {
     /// Called once before the first frame.
-    pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+    #[inline]
+    #[must_use] pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
 
@@ -35,19 +51,25 @@ impl TemplateApp {
             return eframe::get_value(storage, eframe::APP_KEY).unwrap_or_default();
         }
 
-        Default::default()
+        //return Default::default() // not as clear, as per clippy
+        //return TemplateApp::default() //works as well,but error: unnecessary structure name repetition
+        return Self::default() //works as well,but error: unnecessary structure name repetition
+        //return self::TemplateApp::default() //works as well
     }
 }
 
+#[allow(clippy::missing_trait_methods)] //FIXME: deny this
 impl eframe::App for TemplateApp {
     /// Called by the frame work to save state before shutdown.
+    #[inline]
     fn save(&mut self, storage: &mut dyn eframe::Storage) {
         eframe::set_value(storage, eframe::APP_KEY, self);
     }
 
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    #[inline]
+    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         let Self {
             label,
             value,
@@ -78,10 +100,10 @@ impl eframe::App for TemplateApp {
         #[cfg(not(target_arch = "wasm32"))] // no File->Quit on web pages!
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             // The top panel is often a good place for a menu bar:
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("Quit").clicked() {
-                        _frame.close();
+            egui::menu::bar(ui, |ui2| {
+                ui2.menu_button("File", |ui3| {
+                    if ui3.button("Quit").clicked() {
+                        frame.close();
                     }
                 });
             });
@@ -90,27 +112,29 @@ impl eframe::App for TemplateApp {
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("Side Panel");
 
-            ui.horizontal(|ui| {
-                ui.label("Write something: ");
-                ui.text_edit_singleline(label);
+            ui.horizontal(|ui1| {
+                ui1.label("Write something: ");
+                ui1.text_edit_singleline(label);
             });
 
             ui.add(egui::Slider::new(value, 0.0..=10.0).text("value"));
             if ui.button("Increment").clicked() {
+                #[allow(clippy::float_arithmetic)]
+                #[allow(clippy::arithmetic_side_effects)]
                 *value += 1.0;
             }
 
-            ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
-                ui.horizontal(|ui| {
-                    ui.spacing_mut().item_spacing.x = 0.0;
-                    ui.label("powered by ");
-                    ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-                    ui.label(" and ");
-                    ui.hyperlink_to(
+            ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui1| {
+                ui1.horizontal(|ui2| {
+                    ui2.spacing_mut().item_spacing.x = 0.0;
+                    ui2.label("powered by ");
+                    ui2.hyperlink_to("egui", "https://github.com/emilk/egui");
+                    ui2.label(" and ");
+                    ui2.hyperlink_to(
                         "eframe",
                         "https://github.com/emilk/egui/tree/master/crates/eframe",
                     );
-                    ui.label(".");
+                    ui2.label(".");
                 });
             });
         });
@@ -131,12 +155,16 @@ impl eframe::App for TemplateApp {
 
 fn ui_counter(ui: &mut egui::Ui, counter: &mut i32) {
     // Put the buttons and label on the same row:
-    ui.horizontal(|ui| {
-        if ui.button("-").clicked() {
+    ui.horizontal(|ui1| {
+        if ui1.button("-").clicked() {
+            #[allow(clippy::integer_arithmetic)]
+            #[allow(clippy::arithmetic_side_effects)]
             *counter -= 1;
         }
-        ui.label(counter.to_string());
-        if ui.button("+").clicked() {
+        ui1.label(counter.to_string());
+        if ui1.button("+").clicked() {
+            #[allow(clippy::integer_arithmetic)]
+            #[allow(clippy::arithmetic_side_effects)]
             *counter += 1;
         }
     });
