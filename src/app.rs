@@ -171,6 +171,7 @@ impl eframe::App for TemplateApp {
     }
 }
 
+//src: https://docs.rs/egui/latest/egui/#a-simple-example
 fn ui_counter(ui: &mut egui::Ui, counter: &mut i32) {
     // Put the buttons and label on the same row:
     ui.horizontal(|ui1| {
