@@ -1,15 +1,26 @@
-#![deny(clippy::all, clippy::pedantic, clippy::nursery, warnings, future_incompatible, nonstandard_style,
-        non_ascii_idents, clippy::restriction, rust_2018_compatibility, rust_2021_compatibility, unused)]
-#![allow(clippy::print_stdout, clippy::use_debug, clippy::missing_docs_in_private_items)]
-
+#![deny(
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    warnings,
+    future_incompatible,
+    nonstandard_style,
+    non_ascii_idents,
+    clippy::restriction,
+    rust_2018_compatibility,
+    rust_2021_compatibility,
+    unused
+)]
+#![allow(
+    clippy::print_stdout,
+    clippy::use_debug,
+    clippy::missing_docs_in_private_items
+)]
 #![allow(clippy::blanket_clippy_restriction_lints)] //workaround clippy
-
 #![allow(clippy::needless_return)]
-
 // might want to deny later:
 #![allow(clippy::default_numeric_fallback)] // might want to deny later!
 #![allow(clippy::dbg_macro)]
-
 //#![warn(clippy::all, rust_2018_idioms)]
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
@@ -24,7 +35,7 @@ fn main() -> eframe::Result<()> {
         "eframe template",
         native_options,
         Box::new(|cc| return Box::new(eframe_template::TemplateApp::new(cc))),
-    )
+    );
 }
 
 // when compiling to web using trunk.

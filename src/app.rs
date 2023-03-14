@@ -1,15 +1,23 @@
-#![deny(clippy::all, clippy::pedantic, clippy::nursery, warnings, nonstandard_style,
-        clippy::restriction, rust_2018_compatibility, unused)]
-#![allow(clippy::print_stdout, clippy::use_debug, clippy::missing_docs_in_private_items)]
-
+#![deny(
+    clippy::all,
+    clippy::pedantic,
+    clippy::nursery,
+    warnings,
+    nonstandard_style,
+    clippy::restriction,
+    rust_2018_compatibility,
+    unused
+)]
+#![allow(
+    clippy::print_stdout,
+    clippy::use_debug,
+    clippy::missing_docs_in_private_items
+)]
 #![allow(clippy::blanket_clippy_restriction_lints)] //workaround clippy
-
 #![allow(clippy::needless_return)]
-
 // might want to deny later:
 #![allow(clippy::default_numeric_fallback)] // might want to deny later!
 #![allow(clippy::dbg_macro)]
-
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -34,14 +42,15 @@ impl Default for TemplateApp {
             label: "Hello World!".to_owned(),
             value: 2.7,
             cnt1: 0,
-        }
+        };
     }
 }
 
 impl TemplateApp {
     /// Called once before the first frame.
     #[inline]
-    #[must_use] pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+    #[must_use]
+    pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
 
@@ -53,7 +62,8 @@ impl TemplateApp {
 
         //return Default::default() // not as clear, as per clippy
         //return TemplateApp::default() //works as well,but error: unnecessary structure name repetition
-        return Self::default() //works as well,but error: unnecessary structure name repetition
+        return Self::default(); //works as well,but error: unnecessary structure name repetition
+
         //return self::TemplateApp::default() //works as well
     }
 }
@@ -77,22 +87,25 @@ impl eframe::App for TemplateApp {
 
             cnt1, //goof_fixed 1of2 (works but clippy doesn't like it!)
         } = self; */
-        let Self { ref mut label, ref mut value, ref mut cnt1 } = *self; // clippy likes it 1of2
-        //in the 'goof' case, we're mutating local copy of the original self.cnt1 when +/- in the ui_counter() function happens
-        //let Self { ref mut label, ref mut value, ref mut cnt1 } = *self; // this works too, thanks
-                                                                         // Arnavion #rust
-                                                                         // liberachat
+        let Self {
+            ref mut label,
+            ref mut value,
+            ref mut cnt1,
+        } = *self; // clippy likes it 1of2
+                   //in the 'goof' case, we're mutating local copy of the original self.cnt1 when +/- in the ui_counter() function happens
+                   //let Self { ref mut label, ref mut value, ref mut cnt1 } = *self;
+                   //^ this works too, thanks Arnavion #rust liberachat
         egui::Window::new("Window").show(ctx, |ui| {
             ui.label("Windows can be moved by dragging them.");
             ui.label("They are automatically sized based on contents.");
             ui.label("You can turn on resizing and scrolling if you like.");
             ui.label("You would normally choose either panels OR windows.");
-            ui_counter(ui,
-                       //&mut cnt1 //goof 2of2
-                       //cnt1 //goof_fixed 2of2
-                       cnt1 //clippy likes it 2of2
-                      );
-
+            ui_counter(
+                ui,
+                //&mut cnt1 //goof 2of2
+                //cnt1 //goof_fixed 2of2
+                cnt1, //clippy likes it 2of2
+            );
         });
 
         // Examples of how to create different panels and windows.
