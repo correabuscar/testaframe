@@ -14,7 +14,8 @@
 #![allow(
     clippy::print_stdout,
     clippy::use_debug,
-    clippy::missing_docs_in_private_items
+    clippy::missing_docs_in_private_items,
+    clippy::absolute_paths,
 )]
 #![allow(clippy::blanket_clippy_restriction_lints)] //workaround clippy
 #![allow(clippy::needless_return)]

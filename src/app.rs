@@ -2,16 +2,17 @@
     clippy::all,
     clippy::pedantic,
     clippy::nursery,
+    clippy::restriction,
     warnings,
     nonstandard_style,
-    clippy::restriction,
     rust_2018_compatibility,
     unused
 )]
 #![allow(
     clippy::print_stdout,
     clippy::use_debug,
-    clippy::missing_docs_in_private_items
+    clippy::missing_docs_in_private_items,
+    clippy::absolute_paths,
 )]
 #![allow(clippy::blanket_clippy_restriction_lints)] //workaround clippy
 #![allow(clippy::needless_return)]
