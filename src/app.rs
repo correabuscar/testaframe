@@ -19,6 +19,8 @@
 #![allow(clippy::default_numeric_fallback)] // might want to deny later!
 #![allow(clippy::dbg_macro)]
 
+use egui::ViewportCommand;
+
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -79,7 +81,7 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     #[inline]
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         /*let Self {
             label,
             value,
@@ -118,7 +120,8 @@ impl eframe::App for TemplateApp {
             egui::menu::bar(ui, |ui2| {
                 ui2.menu_button("File", |ui3| {
                     if ui3.button("Quit").clicked() {
-                        frame.close();
+                        //frame. close(); // XXX: Most commands in `eframe::Frame` has been replaced with `egui::ViewportCommand`, so So `frame.close()` becomes `ctx.send_viewport_cmd(ViewportCommand::Close)`, etc.
+                        ctx.send_viewport_cmd(ViewportCommand::Close); // Close the window
                     }
                 });
             });
@@ -175,13 +178,13 @@ impl eframe::App for TemplateApp {
 fn ui_counter(ui: &mut egui::Ui, counter: &mut i32) {
     // Put the buttons and label on the same row:
     ui.horizontal(|ui1| {
-        #[allow(clippy::integer_arithmetic)]
+        // error: lint `clippy::integer_arithmetic` has been renamed to `clippy::arithmetic_side_effects`
         #[allow(clippy::arithmetic_side_effects)]
         if ui1.button("-").clicked() {
             *counter -= 1;
         }
         ui1.label(counter.to_string());
-        #[allow(clippy::integer_arithmetic)]
+        // error: lint `clippy::integer_arithmetic` has been renamed to `clippy::arithmetic_side_effects`
         #[allow(clippy::arithmetic_side_effects)]
         if ui1.button("+").clicked() {
             *counter += 1;
